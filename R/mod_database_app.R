@@ -14,11 +14,22 @@ mod_database_app_ui <- function(id){
     golem_add_external_resources(),
     activate_js(),
     fluidPage(
-      h2("Database example"),
-      p("In this application, we are using Postgis database."),
+      h1("Exemple d'application optimis\u00E9e pour du multisession"),
+      p(""),
       hr(),
-      h1("Livre d'or"),
-      mod_database_app_livredor_ui(ns("livredor"))
+      tabsetPanel(
+        tabPanel(title = "Donn\u00E9es sur les prenoms",
+                 mod_all_annee_ui(
+                   ns("prenom")
+                   )
+                 ),
+        tabPanel(title ="Livre d'or",
+                 mod_database_app_livredor_ui(
+                   ns("livredor")
+                   )
+                 )
+      )
+      
     ),
     toasts()
   )
@@ -27,10 +38,10 @@ mod_database_app_ui <- function(id){
 #' database_app Server Function
 #'
 #' @noRd 
-mod_database_app_server <- function(input, output, session, config){
+mod_database_app_server <- function(input, output, session, config, global){
   ns <- session$ns
   
-  local <- reactiveValues()
+  # local <- reactiveValues()
   
   ### Connect to the database
   connect <- connect_db(dbname = config$dbname,
@@ -47,9 +58,9 @@ mod_database_app_server <- function(input, output, session, config){
       if(!test){
         df <- data.frame("date" = "", "feedback"= "", "emoji" = "")
         dbCreateTable(connect$con, "feedback", df)
-        local$data <- df
+        global$data <- df
       }else{
-        local$data <- dbReadTable(connect$con, "feedback")
+        global$data <- dbReadTable(connect$con, "feedback")
       }
       
     }else{
@@ -57,7 +68,9 @@ mod_database_app_server <- function(input, output, session, config){
     }
   })
   
-  callModule(mod_database_app_livredor_server, "livredor", r = local, connect = connect)
+  callModule(mod_database_app_livredor_server, "livredor", r = global, connect = connect)
+  
+  mod_all_annee_server(id = "prenom", global = global, connect = connect)
   
   # shiny::onSessionEnded(DBI::dbDisconnect(connect$con))
 }

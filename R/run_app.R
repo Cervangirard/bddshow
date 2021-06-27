@@ -10,6 +10,8 @@ run_app <- function(onStart = NULL,
                     options = list(), 
                     enableBookmarking = NULL,
                     ...) {
+  
+  future::plan(future::multisession)
   with_golem_options(
     app = shinyApp(ui = app_ui,
                    server = app_server,

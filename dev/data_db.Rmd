@@ -1,0 +1,58 @@
+---
+title: "database"
+author: "Cervan Girard"
+date: "18/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+pkgload::load_all()
+```
+
+
+```{r}
+library(dplyr)
+library(prenoms)
+
+config <- list(dbname = Sys.getenv("NAME_BDD","rr2021"),
+               host = Sys.getenv("HOST","127.0.0.1"),
+               port = Sys.getenv("PORT",5432),
+               user = Sys.getenv("USER","cervan"),
+               password = Sys.getenv("PASSWORD","ok"))
+connect <- connect_db(config$dbname,
+           config$host,
+           config$port,
+           config$user,
+           config$password)
+```
+
+### Preparer la base
+
+Mettre dans la base
+
+```{r}
+if(DBI::dbExistsTable(connect$con, "prenoms")){
+  DBI::dbRemoveTable(connect$con, "prenoms")
+  dplyr::copy_to(connect$con, prenoms::prenoms, name = "prenoms", temporary = FALSE)
+}
+
+prenoms <- tbl(connect$con, "prenoms")
+
+call_db(prenoms, "Vincent")
+
+only_prenoms <- prenoms %>% 
+  distinct(name) %>% 
+  collect() %>% 
+  # mutate(name = stringr::str_trim(name)) %>% 
+  arrange(name)
+
+if(DBI::dbExistsTable(connect$con, "only_prenoms")){
+  DBI::dbRemoveTable(connect$con, "only_prenoms")
+  dplyr::copy_to(connect$con, only_prenoms, name = "only_prenoms", temporary = FALSE)
+}
+
+tbl(connect$con, "only_prenoms")
+
+```
+

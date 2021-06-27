@@ -1,0 +1,83 @@
+---
+title: "dev_history.Rmd for working package"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+
+# Rmd frist et fusen 
+
+Développer les fonctions nécéssaires à l'appli
+
+L'app doit générer un seul graph avec l'évolution du prenom séléectionné. Néanmoins plusieurs coniguration sont possible pour faire ce graphique, soit via une API, soit via l'interrogation d'une base de données.
+
+### Graph évolution
+
+```{r function}
+#' Graphique sur l'evolution d'un prenoms dans le temps
+#'
+#' @param data deja filter avec le prenom
+#'
+#' @return
+#' ggplot
+#' @export
+#'
+#' @examples
+graph_evol <- function(data) {
+  ## TODO check names
+  
+  data %>% 
+    ggplot() +
+    aes(x = year, y = n) +
+    geom_line(color = thinkridentity::thinkr_cols()[1]) +
+    labs(x = "Ann\u00E9es", y = "Total naissance", title = paste0("Evolution de ", prenoms))
+    theme_bw()
+}
+```
+
+```{r examples}
+data <- prenoms::prenoms %>%
+  filter(name == "Vincent" )
+
+graph_evol(data)
+```
+
+```{r tests}
+test_that("Testing graph", {
+data <- prenoms::prenoms %>%
+  filter(name == "Vincent" )
+
+graph <- graph_evol(data)
+
+expect_true(inherits(graph, "ggplot"))
+})
+```
+
+
+# There can be development actions
+
+These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(rmd = "dev/dev_history.Rmd")
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmarkdown using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory

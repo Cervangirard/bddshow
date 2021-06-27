@@ -3,13 +3,17 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import journuit
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here 
+    fluidpage(
+      switch_button_theme("dark_mode"),
       mod_database_app_ui("ok")
+      )
   )
 }
 
