@@ -24,11 +24,11 @@ app_server <- function( input, output, session ) {
   }, ignoreInit = TRUE)
   
   
-  config <- list(dbname = Sys.getenv("NAME_BDD","rr2021"),
+  config <- list(dbname = Sys.getenv("POSTGRES_DB","rr2021"),
                  host = Sys.getenv("HOST","127.0.0.1"),
                  port = Sys.getenv("PORT",5432),
-                 user = Sys.getenv("USER","cervan"),
-                 password = Sys.getenv("PASSWORD","ok"))
+                 user = Sys.getenv("POSTGRES_USER","cervan"),
+                 password = Sys.getenv("POSTGRES_PASSWORD","ok"))
   
   callModule(mod_database_app_server, "ok", config, global)
 }
