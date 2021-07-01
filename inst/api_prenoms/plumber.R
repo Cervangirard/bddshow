@@ -23,7 +23,6 @@ future::plan(future::multisession(workers = 10))
 #* @get /data
 function(prenom = "Vincent") {
  ok <-  promises::as.promise(future::future({
-    Sys.sleep(10)
     prenoms::prenoms %>%
       dplyr::filter(name == prenom ) %>% 
       dplyr::group_by(year) %>% 
