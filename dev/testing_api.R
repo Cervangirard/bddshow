@@ -2,7 +2,9 @@
 
 library(purrr)
 library(promises)
+library(future)
 tictoc::tic()
+
 map(c("Vincent", "Diane", "Colin", "Sebastien", "Margot"), ~ {
   prenom <- .x
   future::future({

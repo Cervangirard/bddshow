@@ -11,8 +11,9 @@ library(plumber)
 library(dplyr)
 library(prenoms)
 library(promises)
+library(future)
 
-future::plan(future::multisession)
+future::plan(future::multisession(workers = 10))
 
 #* @apiTitle Give data to made graph in app
 
@@ -21,14 +22,13 @@ future::plan(future::multisession)
 #* @serializer json
 #* @get /data
 function(prenom = "Vincent") {
- ok <-  future::future({
+ ok <-  promises::as.promise(future::future({
     Sys.sleep(3)
     prenoms::prenoms %>%
       dplyr::filter(name == prenom ) %>% 
       dplyr::group_by(year) %>% 
       dplyr::summarise(n = sum(n))
-  }, packages = c("dplyr")) %...>%
-  print()
+  }, packages = c("dplyr")) )
 
   message("Calculate")
  
