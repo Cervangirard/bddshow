@@ -3,13 +3,15 @@
 library(purrr)
 library(promises)
 library(future)
+
+plan(multisession)
 tictoc::tic()
 
-map(c("Vincent", "Diane", "Colin", "Sebastien", "Margot"), ~ {
+map(c("Vincent", "Diane", "Colin", "Sebastien", "Margot", "Vincent", "Diane", "Colin"), ~ {
   prenom <- .x
   future::future({
     url_call <-
-      paste0(Sys.getenv("URL_API", "http://127.0.0.1:9223"),
+      paste0(Sys.getenv("URL_API", "http://api.cervangirard.me:9223"),
              "/data?prenom=",
              prenom)
     httr::GET(URLencode(url_call)) %>%
