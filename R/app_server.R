@@ -7,7 +7,7 @@
 app_server <- function( input, output, session ) {
   # List the first level callModules here
   
-  future::plan(future::multisession)
+  # future::plan(future::multisession())
   
   thematic::thematic_theme()
   

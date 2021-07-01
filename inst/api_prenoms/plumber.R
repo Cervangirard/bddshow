@@ -13,7 +13,7 @@ library(prenoms)
 library(promises)
 library(future)
 
-# future::plan(future::multisession(workers = 10))
+future::plan(future::multisession(workers = 10))
 
 #* @apiTitle Give data to made graph in app
 
