@@ -23,10 +23,11 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.18")
 RUN Rscript -e 'remotes::install_version("dplyr",upgrade="never", version = "1.0.6")'
 RUN Rscript -e 'remotes::install_github("Cervangirard/journuit@cabfeca1b14a275e290375e462323e423b08fa56")'
 RUN Rscript -e 'remotes::install_github("hadley/emo@3f03b11491ce3d6fc5601e210927eff73bf8e350")'
+RUN Rscript -e 'remotes::install_github("thinkr-open/prenoms",upgrade="never")'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
-EXPOSE 3838
-CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');bddshow::run_app()"
+EXPOSE 9223
+CMD R -e "bddshow::run_api()"

@@ -9,6 +9,8 @@
 
 library(plumber)
 library(dplyr)
+library(prenoms)
+library(promises)
 
 future::plan(future::multisession)
 
@@ -19,14 +21,16 @@ future::plan(future::multisession)
 #* @serializer json
 #* @get /data
 function(prenom = "Vincent") {
- ok <-  promises::future_promise({
+ ok <-  future::future({
+    Sys.sleep(3)
     prenoms::prenoms %>%
-      filter(name == prenom ) %>% 
-      group_by(year) %>% 
-      summarise(n = sum(n))
-  })
- 
- message("Calculate")
+      dplyr::filter(name == prenom ) %>% 
+      dplyr::group_by(year) %>% 
+      dplyr::summarise(n = sum(n))
+  }, packages = c("dplyr")) %...>%
+  print()
+
+  message("Calculate")
  
  ok
 }

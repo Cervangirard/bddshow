@@ -69,7 +69,7 @@ mod_all_annee_server <- function(id, global, connect) {
                "/data?prenom=",
                prenom)
       
-      promises::future_promise({
+      future::future({
         Sys.sleep(0.1)
         list(
           data = 
