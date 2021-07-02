@@ -4,7 +4,10 @@
 \alias{get_dir_cached}
 \title{Dir cache}
 \usage{
-get_dir_cached(directory = get_golem_options("dir_cached"))
+get_dir_cached(directory = Sys.getenv("DIR_CACHED"))
+}
+\arguments{
+\item{directory}{directory for cached}
 }
 \description{
 Dir cache

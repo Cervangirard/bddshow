@@ -76,10 +76,13 @@ get_workers <- function(){
 }
 
 #' Dir cache
+#'
+#' @param directory directory for cached
+#'
 #' @importFrom golem get_golem_options
-get_dir_cached <- function(directory = get_golem_options("dir_cached")){
+get_dir_cached <- function(directory = Sys.getenv("DIR_CACHED")){
   
-  if(is.null(directory)){
+  if(is.null(directory) | directory == ""){
     message("Set cached to tmp dir")
     directory <- tempdir()
   }
