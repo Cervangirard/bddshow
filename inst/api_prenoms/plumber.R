@@ -23,6 +23,7 @@ library(future)
 #* @get /data
 function(prenom = "Vincent") {
  ok <-  promises::as.promise(future::future({
+   ## for fun
     prenoms::prenoms %>%
       dplyr::filter(name == prenom ) %>% 
       dplyr::group_by(year) %>% 

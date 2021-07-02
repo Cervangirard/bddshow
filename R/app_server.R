@@ -26,8 +26,8 @@ app_server <- function( input, output, session ) {
   
   
   config <- list(dbname = Sys.getenv("POSTGRES_DB","rr2021"),
-                 host = Sys.getenv("HOST","127.0.0.1"),
-                 port = Sys.getenv("PORT",5432),
+                 host = Sys.getenv("POSTGRES_HOST","127.0.0.1"),
+                 port = Sys.getenv("POSTGRES_PORT",5432),
                  user = Sys.getenv("POSTGRES_USER","cervan"),
                  password = Sys.getenv("POSTGRES_PASSWORD","ok"))
   

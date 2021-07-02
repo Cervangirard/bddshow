@@ -92,7 +92,7 @@ mod_all_annee_server <- function(id, global, connect) {
                prenom)
       
       future::future({
-        Sys.sleep(0.2)
+        Sys.sleep(0.4)
         list(
           data = 
             httr::GET(URLencode(url_call)) %>%

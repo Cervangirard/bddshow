@@ -8,6 +8,7 @@
 #' @importFrom future plan multisession
 #'
 run_api <- function(port = 9223){
-  plan(multisession(workers = get_workers()))
+
+  plan(multisession(workers = 10))
   plumb(file= app_sys("api_prenoms", "plumber.R"))$run(host="0.0.0.0",port = port)
 }
