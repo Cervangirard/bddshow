@@ -3,13 +3,10 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom journuit init_cookie_theme change_theme
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
-  
-  # future::plan(future::multisession())
-  
-  thematic::thematic_theme()
   
   global <- reactiveValues()
   

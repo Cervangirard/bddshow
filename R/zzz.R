@@ -1,1 +1,1 @@
-globalVariables(c("name", "year"))
+globalVariables(c("name", "year", "n"))

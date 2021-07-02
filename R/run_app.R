@@ -6,12 +6,13 @@
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
+#' @importFrom future plan multisession
 run_app <- function(onStart = NULL,
                     options = list(), 
                     enableBookmarking = NULL,
                     ...) {
   
-  future::plan(future::multisession(workers = 10))
+  plan(multisession(workers = get_workers()))
   with_golem_options(
     app = shinyApp(ui = app_ui,
                    server = app_server,

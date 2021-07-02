@@ -7,7 +7,8 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import DBI 
+#' @importFrom DBI dbListTables dbCreateTable dbReadTable
+
 mod_database_app_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -36,6 +37,7 @@ mod_database_app_ui <- function(id){
 }
 
 #' database_app Server Function
+#'
 #'
 #' @noRd 
 mod_database_app_server <- function(input, output, session, config, global){

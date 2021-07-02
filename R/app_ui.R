@@ -3,7 +3,7 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import journuit
+#' @importFrom journuit fluidpage switch_button_theme
 #' @noRd
 app_ui <- function(request) {
   tagList(

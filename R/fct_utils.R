@@ -61,3 +61,15 @@ heart <- function(id){
     )
   )
 }
+
+#' Get workers
+#' @importFrom future availableCores
+get_workers <- function(){
+  cores <- future::availableCores()
+  if(cores == 1){
+    workers <- 10
+  }else{
+    workers <- cores
+  }
+  return(workers)
+}

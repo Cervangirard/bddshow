@@ -3,6 +3,7 @@
 #' @param data data form DB
 #' @param prenoms prenoms to filter
 #'
+#' @importFrom dplyr filter group_by summarise
 #' @return view of result
 #' @export
 #'
@@ -21,6 +22,9 @@ call_db <- function(data, prenoms){
 #' @param port port
 #' @param user user
 #' @param password password
+#' 
+#' @importFrom DBI dbCanConnect dbConnect
+#' @importFrom RPostgres Postgres
 #'
 #' @return connect
 connect_db <- function(dbname = "rr2021", 
@@ -29,14 +33,14 @@ connect_db <- function(dbname = "rr2021",
                        user = "user",
                        password = "password"){
   
-  ask <- DBI::dbCanConnect(RPostgres::Postgres(),
+  ask <- dbCanConnect(RPostgres::Postgres(),
                            dbname = dbname, 
                            host = host,
                            port = port, 
                            user = user,
                            password = password)
   if(ask){
-    con <- DBI::dbConnect(RPostgres::Postgres(),
+    con <- dbConnect(RPostgres::Postgres(),
                           dbname = dbname, 
                           host = host,
                           port = port, 

@@ -7,6 +7,9 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @importFrom dplyr mutate arrange desc
+#' @importFrom lubridate now ymd_hms
+#' @importFrom DBI dbAppendTable dbReadTable
 mod_database_app_livredor_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -20,7 +23,7 @@ mod_database_app_livredor_ui <- function(id){
 }
 
 #' database_app_livredor Server Function
-#'
+#' 
 #' @noRd 
 mod_database_app_livredor_server <- function(input, output, session, r, connect){
   ns <- session$ns
@@ -33,7 +36,7 @@ mod_database_app_livredor_server <- function(input, output, session, r, connect)
   observeEvent( input$feedback , {
     showModal(
       modalDialog(
-        title = "Tell us everything !",
+        title = "Alors cette conf\u00E9rence ?!",
         tagList(
           textAreaInput(ns("comms_txt"), label = ""),
           selectInput(ns("great"), "Give us a smiley", choices = emo::jis$emoji),
@@ -50,7 +53,10 @@ mod_database_app_livredor_server <- function(input, output, session, r, connect)
       golem::invoke_js("succes", "error")
     }
     req(connect$con)
-    df <- data.frame(date = as.character(lubridate::today()), feedback = input$comms_txt, emoji = input$great)
+    df <- data.frame(
+      date = as.character(now()),
+      feedback = input$comms_txt,
+      emoji = input$great)
     dbAppendTable(connect$con, "feedback", df)
     local$data <- dbReadTable(connect$con, "feedback")
   })
@@ -66,8 +72,8 @@ mod_database_app_livredor_server <- function(input, output, session, r, connect)
   output$comms <- DT::renderDT({
     not_validate(!is.null(connect$con), msg = "Needs to be connect to the database!")
     local$data %>%
-      dplyr::mutate(date = lubridate::ymd(date)) %>%
-      dplyr::arrange(dplyr::desc(date))
+      mutate(date = ymd_hms(date)) %>%
+      arrange(desc(date))
   }, 
   rownames = FALSE,
   options = list(lengthChange = FALSE, dom = 'tp')

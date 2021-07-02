@@ -7,9 +7,15 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @import dplyr
 #' @importFrom stringr str_detect
+#' @importFrom dplyr tbl collect filter
+#' @importFrom ggplot2 labs
+#' @importFrom httr GET content
+#' @importFrom purrr map_df
+#' @importFrom tibble as_tibble
 #' @importFrom promises %...>%
+#' @importFrom thematic thematic_shiny
+
 mod_all_annee_ui <- function(id) {
   ns <- NS(id)
   tagList(h2("Evolution de votre prenom en fonction des ann\u00E9es"),
@@ -26,7 +32,7 @@ mod_all_annee_ui <- function(id) {
 }
 
 #' all_annee Server Functions
-#'
+#' 
 #' @noRd
 mod_all_annee_server <- function(id, global, connect) {
   moduleServer(id, function(input, output, session) {
@@ -65,12 +71,13 @@ mod_all_annee_server <- function(id, global, connect) {
       
       prenom <- input$prenom
       url_call <-
-        paste0(Sys.getenv("URL_API", "http://127.0.0.1:9223"),
+        paste0(
+          Sys.getenv("URL_API", "http://127.0.0.1:9223"),
                "/data?prenom=",
                prenom)
       
       future::future({
-        Sys.sleep(0.1)
+        Sys.sleep(0.5)
         list(
           data = 
             # call_api(url_call),

@@ -25,6 +25,6 @@ graph_evol <- function(data, prenoms) {
     aes(x = year, y = n) +
     geom_line(color = "#4a4f93") +
     labs(x = "Ann\u00E9es", y = "Total naissance", title = paste0("Evolution de ", prenoms)) +
-    # theme_bw() +
+    # Pour le thematic shiny 
     theme(plot.subtitle = element_blank())
 }
