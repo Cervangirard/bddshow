@@ -64,6 +64,7 @@ heart <- function(id){
 
 #' Get workers
 #' @importFrom future availableCores
+#' @export
 get_workers <- function(){
   cores <- future::availableCores()
   if(cores == 1){
@@ -72,4 +73,21 @@ get_workers <- function(){
     workers <- cores
   }
   return(workers)
+}
+
+#' Dir cache
+#' @importFrom golem get_golem_options
+get_dir_cached <- function(directory = get_golem_options("dir_cached")){
+  
+  if(is.null(directory)){
+    message("Set cached to tmp dir")
+    directory <- tempdir()
+  }
+  
+  if(!dir.exists(directory)){
+    dir.create(path = directory, mode = "777")
+    directory
+  }else{
+    directory
+  }
 }

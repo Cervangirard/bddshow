@@ -13,6 +13,8 @@ app_server <- function( input, output, session ) {
   observeEvent(session,{
     init_cookie_theme(input$dark_mode)
     global$dark_mode <- input$dark_mode
+    
+
   }, once = TRUE)
   
   observeEvent(input$dark_mode,{

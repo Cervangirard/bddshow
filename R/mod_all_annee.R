@@ -8,13 +8,14 @@
 #'
 #' @importFrom shiny NS tagList
 #' @importFrom stringr str_detect
-#' @importFrom dplyr tbl collect filter
+#' @importFrom dplyr tbl collect filter pull
 #' @importFrom ggplot2 labs
 #' @importFrom httr GET content
 #' @importFrom purrr map_df
 #' @importFrom tibble as_tibble
 #' @importFrom promises %...>%
 #' @importFrom thematic thematic_shiny
+#' @importFrom cachem cache_disk
 
 mod_all_annee_ui <- function(id) {
   ns <- NS(id)
@@ -22,8 +23,15 @@ mod_all_annee_ui <- function(id) {
           fluidRow(
             column(
               2,
-              textInput(ns("search"), 'Tapez les premi\u00E8res lettres :'),
-              selectizeInput(ns("prenom"), label = "Choissisez votre prenom", choices = NULL)
+              textInput(
+                ns("search"), 
+                'Tapez les premi\u00E8res lettres :'
+                ),
+              selectizeInput(
+                ns("prenom"), 
+                label = "Choissisez votre prenom",
+                choices = NULL),
+              actionButton(ns("go"), "Lancer le calcul !")
             ),
             column(8,
                    plotOutput(ns("graph")))
@@ -48,10 +56,10 @@ mod_all_annee_server <- function(id, global, connect) {
     
     observeEvent(input$search, {
       req(input$search)
-      
       prenoms <- local$only_prenoms %>%
         filter(str_detect(name, paste0("^", local(input$search)))) %>%
-        collect()
+        pull()
+      
       updateSelectizeInput(
         session = session,
         inputId = "prenom",
@@ -61,11 +69,18 @@ mod_all_annee_server <- function(id, global, connect) {
       
     })
     
-    
     rv_plot <- reactiveVal(NULL)
     
-    observeEvent(c(global$dark_mode, input$prenom), {
+    observeEvent(c(global$dark_mode, input$go), {
       req(input$prenom)
+      
+      showNotification(
+        id = "notif",
+        ui = tagList(p("Graph en cours!")),
+        closeButton = FALSE,
+        duration = NULL,
+        type = "warning"
+      )
       
       dark_mode <- global$dark_mode
       
@@ -77,10 +92,9 @@ mod_all_annee_server <- function(id, global, connect) {
                prenom)
       
       future::future({
-        Sys.sleep(0.5)
+        Sys.sleep(0.2)
         list(
           data = 
-            # call_api(url_call),
             httr::GET(URLencode(url_call)) %>%
             httr::content() %>%
             purrr::map_df( ~ tibble::as_tibble(.x, .name_repair = "universal")),
@@ -98,11 +112,15 @@ mod_all_annee_server <- function(id, global, connect) {
     })
     
     output$graph <- renderPlot({
-
+        
         rv_plot() %>%
           print()
     }) %>%
-      bindCache(rv_plot())
+      bindCache(
+        rv_plot(),
+        removeNotification("notif"),
+        cache = cache_disk(dir = get_dir_cached())
+        )
     
   })
 }
