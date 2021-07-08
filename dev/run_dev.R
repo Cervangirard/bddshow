@@ -10,7 +10,5 @@ golem::document_and_reload()
 
 # Run the application
 
-Sys.setenv("DIR_CACHED" = "/home/cached-shiny")
-
 run_app()
 

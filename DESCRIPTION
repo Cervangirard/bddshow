@@ -10,10 +10,11 @@ Description: App avec bdd pour kube.
 License: MIT + file LICENSE
 Imports: 
     cachem (>= 1.0.5),
+    cli,
     config,
     DBI,
+    digest,
     dplyr,
-    DT,
     emo,
     future,
     ggplot2,
@@ -26,6 +27,7 @@ Imports:
     plumber,
     promises,
     purrr,
+    reactable,
     RPostgres,
     shiny,
     stringr,

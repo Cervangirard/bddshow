@@ -9,6 +9,7 @@
 #' @importFrom shiny NS tagList 
 #' @importFrom dplyr mutate arrange desc
 #' @importFrom lubridate now ymd_hms
+#' @importFrom reactable reactableOutput renderReactable reactable
 #' @importFrom DBI dbAppendTable dbReadTable
 mod_database_app_livredor_ui <- function(id){
   ns <- NS(id)
@@ -16,7 +17,7 @@ mod_database_app_livredor_ui <- function(id){
     h2("Make us happy, give us your feedback !"),
     actionButton(ns("feedback"), "Yes, let's go !"),
     refresh(ns('refresh'), ns("msg_refresh")),
-    DT::DTOutput(ns("comms")),
+    reactableOutput(ns("comms")),
     heart(ns("thanks"))
   )
   
@@ -69,15 +70,13 @@ mod_database_app_livredor_server <- function(input, output, session, r, connect)
   })
   
   
-  output$comms <- DT::renderDT({
+  output$comms <- renderReactable({
     not_validate(!is.null(connect$con), msg = "Needs to be connect to the database!")
     local$data %>%
-      mutate(date = ymd_hms(date)) %>%
-      arrange(desc(date))
-  }, 
-  rownames = FALSE,
-  options = list(lengthChange = FALSE, dom = 'tp')
-  )
+      mutate(date = as.character(date)) %>%
+      arrange(desc(date)) %>% 
+      reactable()
+  })
 }
 
 ## To be copied in the UI
