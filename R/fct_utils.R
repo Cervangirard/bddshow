@@ -9,6 +9,14 @@ toasts <- function() {
     div(id = "error",
         class = "error card-book",
         p("Connection Error!")
+    ),
+    div(id = "succes_api", 
+        class = "succes card-book",
+        p("Successful connection to API!")
+    ),
+    div(id = "error_api",
+        class = "error card-book",
+        p("Connection Error to API!")
     )
   )
 } 

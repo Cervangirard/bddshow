@@ -19,7 +19,8 @@ app_server <- function( input, output, session ) {
   
   observeEvent(input$dark_mode,{
     
-    change_theme(input$dark_mode)
+
+  change_theme(input$dark_mode)
     
     global$dark_mode <- input$dark_mode
   }, ignoreInit = TRUE)

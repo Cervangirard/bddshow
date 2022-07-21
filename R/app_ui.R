@@ -3,7 +3,7 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @importFrom journuit theme_shiny
+#' @importFrom journuit theme_shiny switch_button_theme
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -12,7 +12,7 @@ app_ui <- function(request) {
     # List the first level UI elements here 
     fluidPage(
       theme = theme_shiny(),
-      # switch_button_theme("dark_mode"),
+      switch_button_theme("dark_mode"),
       mod_database_app_ui("ok")
       )
   )

@@ -13,6 +13,7 @@ pkgload::load_all()
 
 ```{r}
 library(dplyr)
+# remotes::install_github("thinkr-open/prenoms")
 library(prenoms)
 
 config <- list(dbname = Sys.getenv("NAME_BDD","rr2021"),
@@ -32,8 +33,8 @@ connect <- connect_db(config$dbname,
 Mettre dans la base
 
 ```{r}
-if(DBI::dbExistsTable(connect$con, "prenoms")){
-  DBI::dbRemoveTable(connect$con, "prenoms")
+if(!DBI::dbExistsTable(connect$con, "prenoms")){
+  # DBI::dbRemoveTable(connect$con, "prenoms")
   dplyr::copy_to(connect$con, prenoms::prenoms, name = "prenoms", temporary = FALSE)
 }
 
@@ -47,8 +48,8 @@ only_prenoms <- prenoms %>%
   # mutate(name = stringr::str_trim(name)) %>% 
   arrange(name)
 
-if(DBI::dbExistsTable(connect$con, "only_prenoms")){
-  DBI::dbRemoveTable(connect$con, "only_prenoms")
+if(!DBI::dbExistsTable(connect$con, "only_prenoms")){
+  # DBI::dbRemoveTable(connect$con, "only_prenoms")
   dplyr::copy_to(connect$con, only_prenoms, name = "only_prenoms", temporary = FALSE)
 }
 

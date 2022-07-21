@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_detect str_to_sentence
 #' @importFrom dplyr tbl collect filter pull
 #' @importFrom ggplot2 labs
 #' @importFrom httr GET content
@@ -58,7 +58,7 @@ mod_all_annee_server <- function(id, global, connect) {
     observeEvent(input$search, {
       req(input$search)
       prenoms <- local$only_prenoms %>%
-        filter(str_detect(name, paste0("^", local(input$search)))) %>%
+        filter(str_detect(name, paste0("^", local(str_to_sentence(input$search))))) %>%
         pull()
       
       updateSelectizeInput(
@@ -74,6 +74,19 @@ mod_all_annee_server <- function(id, global, connect) {
     
     observeEvent(input$go, {
       req(input$prenom)
+      
+      url_health <- paste0(Sys.getenv("URL_API", "http://127.0.0.1:9223"), "/health")
+
+      status <- try({
+        httr::GET(url_health) %>% 
+          httr::status_code()
+      }, silent = TRUE)
+      
+      if(status != 200 | inherits(status,"try-error")){
+        golem::invoke_js("succes", "error_api")
+        return(NULL)
+      }
+      
       showNotification(
         id = "notif",
         ui = tagList(p("Graph en cours!")),
@@ -82,11 +95,11 @@ mod_all_annee_server <- function(id, global, connect) {
         type = "warning"
       )
       
-      
-      cache_key <- digest::digest({
-        list(input$prenom,
-             rv_plot())
-      })
+     
+      cache_key <- digest::digest(list(input$prenom
+                                       # , global$dark_mode
+                                       )
+                                  )
       
       prenom <- input$prenom
       url_call <-
@@ -101,6 +114,9 @@ mod_all_annee_server <- function(id, global, connect) {
           rv_plot()
       } else{
         future::future({
+          
+          Sys.sleep(3)
+          
           list(
             data =
               httr::GET(URLencode(url_call)) %>%
